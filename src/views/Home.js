@@ -14,7 +14,7 @@ const Home = (props) => {
     //configura a navbar
     props.navigation.setOptions({
       headerTitle: (props) => (
-        <Text style={styles.name}>Teste - IBM - Wiliam Rocha dos Santos -  Star Wars SWAPI</Text>
+        <Text style={styles.name}>Teste - RBM - Wiliam Rocha dos Santos -  Star Wars SWAPI</Text>
       ),
     });
   }, [props.navigation]);
