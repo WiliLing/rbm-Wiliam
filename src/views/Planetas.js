@@ -1,6 +1,6 @@
 
-import React , { useState, useEffect } from 'react'
-import {    
+import React, { useState, useEffect, Component } from 'react'
+import {
   StyleSheet,
   Text,
   View,
@@ -12,59 +12,85 @@ import {
   Modal,
   Picker
 } from 'react-native'
-import _ from 'lodash'    
+import _ from 'lodash'
 import { SafeAreaView } from 'react-native'
 import Container from '../components/Container'
 import { ScreenCont } from "../SafeAreaAndroid"
+import axios from 'axios'
 
 
-const Etapa1 = (props) => {
-   const State = {
-        data: [],
-        loading: true,
-        modalVisible: false,
-        gender: 'all',
-      };
 
-    const   renderItem = ({ item }) => {    
-        return (
-          <View style={styles.itemContainer}>
+const Planetas = (props) => {
+
+
+  const [li, setLi] = useState([])
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.itemContainer}>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={() => props.navigation.navigate("Informacoes", { residents: item.residents, name: item.name, climate: item.climate, terrain: item.terrain, population: item.population })}
+        ><View>
             <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.info}>Population{item.population}</Text>
-            <Text style={styles.info}>Personagens: {item.residents[id]}</Text>
-            <Text style={styles.info}>Filmes: {item.gender[id]}</Text>
-            <TouchableHighlight
-              style={styles.button}
-              onPress={() => this.openPressItem(item.planets)}
-            >
-              <Text style={styles.info}></Text>
-            </TouchableHighlight>
+            <Text style={styles.name}>População: {item.population}</Text>
           </View>
-        )
-      }
-      
-      
-    useEffect(() => {
-     fetch('https://swapi.dev/api/planets/1/')
-      .then(res => res.json())
-      .then(json => this.setState({ data: json.results, loading: false }))
-      .catch((err) => console.log('err:', err))
-
-        //configura a navbar
-        props.navigation.setOptions({
-            headerTitle: (props) => (
-                <Text>Etapa 1</Text>
-            ),
-        });
-    }, [props.navigation]);
-    return(
-    <SafeAreaView style={ScreenCont.AndroidSafeArea}>
-        <Container>
-        </Container>
-    </SafeAreaView>
+        </TouchableHighlight>
+      </View>
     )
+  }
+ /*Chamada da API e armazenamento no state*/
+  async function chamada() {
+    let aux = []
+    for (var i = 1; i < 7; i++) {
+      try {
+        const response = await axios.get(`https://swapi.dev/api/planets/?page=${i}`)
+        aux = aux.concat(response.data.results)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    setLi(aux)
+  }
+
+
+
+  useEffect(() => {
+
+    chamada()
+    //configura a navbar
+    props.navigation.setOptions({
+      headerTitle: (props) => (
+        <Text style={styles.name}>Planetas</Text>
+      ),
+    });
+  }, [props.navigation]);
+
+  return (
+    <SafeAreaView style={ScreenCont.AndroidSafeArea}>
+      <Container>
+        <FlatList
+          data={li}
+          keyExtractor={(value, index) => index.toString()}
+          renderItem={renderItem}
+        />
+      </Container>
+    </SafeAreaView>
+  )
 }
 
-
-export default Etapa1
-
+const styles = StyleSheet.create({
+  itemContainer: {
+    padding: 15,
+    borderBottomWidth: 1, borderBottomColor: '#ffe81f'
+  },
+  name: {
+    color: '#ffe81f',
+    fontSize: 18
+  },
+  info: {
+    color: '#ffe81f',
+    fontSize: 14,
+    marginTop: 5
+  }
+});
+export default Planetas

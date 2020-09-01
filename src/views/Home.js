@@ -1,69 +1,72 @@
-import React , { useState, useEffect } from 'react'
+
+import React, { useState, useEffect } from 'react'
 import { SafeAreaView, Text, StyleSheet, View, FlatList, TouchableHighlight } from 'react-native'
+import { ScreenCont } from "../SafeAreaAndroid"
 import Container from '../components/Container'
-import {ScreenCont} from "../SafeAreaAndroid"
-import Etapa1 from '../views/Etapa1'
-import Planets from '../views/Planets'
-import SectionListItem from '../components/SectionListItem'
 
 const links = [
-    { title: 'Etapa1' },
-    { title: 'Planets' },
-  ]
-  const Home = (props) => {
+  { title: 'Introducao' },
+  {title: 'Planetas'}
+]
+const Home = (props) => {
   useEffect(() => {
 
     //configura a navbar
     props.navigation.setOptions({
-        headerTitle: (props) => (
-            <Text>Home</Text>
-        ),
+      headerTitle: (props) => (
+        <Text style={styles.name}>Teste - IBM - Wiliam Rocha dos Santos -  Star Wars SWAPI</Text>
+      ),
     });
-}, [props.navigation]);
+  }, [props.navigation]);
 
 
-const navigate = (link) => {    
+  const navigate = (link) => {
     const { navigate } = props.navigation
     navigate(link)
   }
 
 
-const renderItem = ({ item, index }) => {    
+  const renderItem = ({ item, index }) => {
     return (
+    <View style={styles.itemContainer}> 
       <TouchableHighlight
         onPress={() => props.navigation.navigate(item.title)}
-        style={[ styles.item, { borderTopWidth: index === 0 ? 1 : null} ]}>
-        <Text style={styles.text}>{item.title}</Text>
+        style={[styles.button]}>
+        <Text style={styles.name}>{item.title}</Text>
       </TouchableHighlight>
+    </View>
     )
   }
 
 
-    return (
+  return (
     <SafeAreaView style={ScreenCont.AndroidSafeArea}>
-        <View>
-            <FlatList
-                data={links}
-                keyExtractor={(item) => item.title}
-                renderItem={renderItem}
-            />
-        </View>
+      <Container>
+        <FlatList
+          data={links}
+          keyExtractor={(item) => item.title}
+          renderItem={renderItem}
+        />
+      </Container>
     </SafeAreaView>
-    )
+  )
 }
 
 
 const styles = StyleSheet.create({
-    item: {
-      padding: 20,
-      justifyContent: 'center',
-      borderColor: 'rgba(255,232,31, .2)',
-      borderBottomWidth: 1
-    },
-    text: {
-      color: '#ffe81f',
-      fontSize: 18
-    }
-  });
+  itemContainer: {
+    padding: 15,
+    borderBottomWidth: 1, borderBottomColor: '#ffe81f'
+  },
+  name: {
+    color: '#ffe81f',
+    fontSize: 18
+  },
+  info: {
+    color: '#ffe81f',
+    fontSize: 14,
+    marginTop: 5
+  }
+});;
 
 export default Home
