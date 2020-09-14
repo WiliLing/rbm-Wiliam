@@ -18,12 +18,15 @@ import Container from '../components/Container'
 import { ScreenCont } from "../SafeAreaAndroid"
 import axios from 'axios'
 
-
-
 const Planetas = (props) => {
 
 
   const [li, setLi] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
+
+
+
+
   const renderItem = ({ item }) => {
     return (
       <View style={styles.itemContainer}>
@@ -40,6 +43,7 @@ const Planetas = (props) => {
   }
  /*Chamada da API e armazenamento no state*/
   async function chamada() {
+    setIsLoading(true);
     let aux = []
     for (var i = 1; i < 7; i++) {
       try {
@@ -50,6 +54,7 @@ const Planetas = (props) => {
       }
     }
     setLi(aux)
+    setIsLoading(false);
   }
 
 
@@ -65,14 +70,17 @@ const Planetas = (props) => {
     });
   }, [props.navigation]);
 
+
+
+
   return (
     <SafeAreaView style={ScreenCont.AndroidSafeArea}>
-      <Container>
+      <Container>{isLoading ?(<ActivityIndicator size="large" color="#ffe81f" />) :(
         <FlatList
           data={li}
           keyExtractor={(value, index) => index.toString()}
           renderItem={renderItem}
-        />
+        />)}
       </Container>
     </SafeAreaView>
   )
@@ -81,7 +89,9 @@ const Planetas = (props) => {
 const styles = StyleSheet.create({
   itemContainer: {
     padding: 15,
-    borderBottomWidth: 1, borderBottomColor: '#ffe81f'
+    borderBottomWidth: 1, borderBottomColor: '#ffe81f',
+    textAlign: "center",
+    alignSelf: "auto"
   },
   name: {
     color: '#ffe81f',

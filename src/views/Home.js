@@ -56,7 +56,9 @@ const Home = (props) => {
 const styles = StyleSheet.create({
   itemContainer: {
     padding: 15,
-    borderBottomWidth: 1, borderBottomColor: '#ffe81f'
+    borderBottomWidth: 1, borderBottomColor: '#ffe81f',
+    textAlign: "center",
+    alignSelf: "auto"
   },
   name: {
     color: '#ffe81f',

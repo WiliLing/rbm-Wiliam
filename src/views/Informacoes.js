@@ -5,6 +5,7 @@ import {
   Text,
   View,
   FlatList,
+  ActivityIndicator,
 
 } from 'react-native'
 import _ from 'lodash'
@@ -17,11 +18,13 @@ import axios from 'axios'
 const Informacoes = (props) => {
   const [li, setLi] = useState([])
   const { residents, name, climate, terrain, population } = props.route.params
+  const [isLoading, setIsLoading] = useState(false);
 
   console.log(name)
 
   /*Chamada da api puxando residentes em um array*/
   async function chamada() {
+    setIsLoading(true);
     let aux = []
     for (var i = 0; i < residents.length; i++) {
       try {
@@ -32,8 +35,8 @@ const Informacoes = (props) => {
         console.error(error);
       }
     }
-    console.log(li)
     setLi(aux)
+    setIsLoading(false);
   }
 
   const renderItem = ({ item }) => {
@@ -57,21 +60,19 @@ const Informacoes = (props) => {
   /*Renderiza em uma lista em que cada elemento é um objeto da api*/
   return (
     <SafeAreaView style={ScreenCont.AndroidSafeArea}>
-      <Container>
+        <Container>
         <View style={styles.itemContainer}>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.name}>Clima: {climate}</Text>
           <Text style={styles.name}>População: {population}</Text>
           <Text style={styles.name}>Terreno: {terrain}</Text>
-        </View>
-      </Container>
-      <Container>
+        </View>{isLoading ?(<ActivityIndicator size="large" color="#ffe81f" />) :(
         <FlatList
           data={li}
           keyExtractor={(value, index) => index.toString()}
           renderItem={renderItem}
         />
-      </Container>
+        )}</Container>
     </SafeAreaView>
   )
 }
@@ -80,7 +81,9 @@ const Informacoes = (props) => {
 const styles = StyleSheet.create({
   itemContainer: {
     padding: 15,
-    borderBottomWidth: 1, borderBottomColor: '#ffe81f'
+    borderBottomWidth: 1, borderBottomColor: '#ffe81f',
+    textAlign: "center",
+    alignSelf: "auto"
   },
   name: {
     color: '#ffe81f',
